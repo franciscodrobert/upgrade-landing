@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>upGrade — Smart University Tutoring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080B12;
+  --bg2: #0D1117;
+  --card: #111720;
+  --card2: #161D28;
+  --blue: #4F8EF7;
+  --blue-dim: rgba(79,142,247,0.12);
+  --blue-glow: rgba(79,142,247,0.25);
+  --green: #3DDC84;
+  --amber: #F0A23A;
+  --white: #F0F4FF;
+  --gray: #8B96A8;
+  --lgray: #C5CDD9;
+  --border: rgba(255,255,255,0.07);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.6;
+}
+
+/* ── TYPOGRAPHY ── */
+h1,h2,h3,h4 { font-family: 'Syne', sans-serif; font-weight: 800; line-height: 1.08; }
+.label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--blue);
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px;
+  background: rgba(8,11,18,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.nav-logo {
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px;
+  color: var(--white);
+  text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo span { color: var(--blue); }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  color: var(--gray); text-decoration: none; font-size: 14px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.lang-toggle {
+  display: flex; background: var(--card); border-radius: 8px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.lang-toggle button {
+  background: none; border: none; color: var(--gray);
+  padding: 6px 14px; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+}
+.lang-toggle button.active {
+  background: var(--blue); color: #fff;
+}
+.btn-nav {
+  background: var(--blue); color: #fff; border: none;
+  padding: 10px 22px; border-radius: 10px; font-size: 14px;
+  font-weight: 500; cursor: pointer; transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.btn-nav:hover { background: #6BA3FF; transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 48px 80px;
+  position: relative; overflow: hidden;
+}
+.hero-glow {
+  position: absolute; top: -200px; right: -200px;
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,142,247,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-glow2 {
+  position: absolute; bottom: -100px; left: -100px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(61,220,132,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.hero-left { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--blue-dim); border: 1px solid rgba(79,142,247,0.3);
+  border-radius: 100px; padding: 6px 16px; margin-bottom: 32px;
+}
+.hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+.hero h1 {
+  font-size: clamp(48px, 5vw, 72px);
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #F0F4FF 0%, #8BA8D4 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--blue) 0%, #7BB3FF 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 18px; color: var(--gray); margin-bottom: 40px;
+  max-width: 480px; line-height: 1.7;
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--blue); color: #fff; border: none;
+  padding: 16px 32px; border-radius: 12px; font-size: 16px;
+  font-weight: 500; cursor: pointer; transition: all 0.25s;
+  font-family: 'DM Sans', sans-serif;
+  box-shadow: 0 0 30px rgba(79,142,247,0.35);
+}
+.btn-primary:hover {
+  background: #6BA3FF; transform: translateY(-2px);
+  box-shadow: 0 0 45px rgba(79,142,247,0.5);
+}
+.btn-secondary {
+  background: transparent; color: var(--lgray);
+  border: 1px solid var(--border); padding: 16px 32px;
+  border-radius: 12px; font-size: 16px; font-weight: 500;
+  cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+}
+.btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+
+.hero-stats {
+  display: flex; gap: 40px; margin-top: 48px;
+  padding-top: 40px; border-top: 1px solid var(--border);
+}
+.hero-stat-val {
+  font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
+  color: var(--blue);
+}
+.hero-stat-lbl { font-size: 13px; color: var(--gray); margin-top: 2px; }
+
+/* ── APP MOCKUP ── */
+.hero-right { position: relative; }
+.mockup-wrap {
+  position: relative; display: flex; justify-content: center;
+}
+.phone {
+  width: 280px;
+  background: var(--card);
+  border-radius: 36px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.1);
+  position: relative; z-index: 2;
+}
+.phone-notch {
+  width: 100px; height: 28px;
+  background: #000;
+  border-radius: 0 0 18px 18px;
+  margin: 0 auto;
+}
+.phone-screen { padding: 16px; }
+.phone-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.phone-logo { font-family: 'Syne',sans-serif; font-weight: 800; font-size: 18px; }
+.phone-logo span { color: var(--blue); }
+.phone-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), #3DDC84); }
+.search-box {
+  background: var(--card2); border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--border);
+}
+.search-icon { width: 16px; height: 16px; opacity: 0.4; }
+.search-placeholder { font-size: 13px; color: var(--gray); }
+.section-title-sm { font-size: 11px; font-weight: 600; color: var(--gray); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+.tutor-card-mini {
+  background: var(--card2); border-radius: 12px; padding: 12px;
+  margin-bottom: 10px; border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  transition: border-color 0.2s;
+}
+.tutor-card-mini.active { border-color: var(--blue); }
+.tutor-avatar-mini {
+  width: 38px; height: 38px; border-radius: 50%;
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne',sans-serif; font-weight: 800; font-size: 14px; color: #fff;
+}
+.tutor-info-mini { flex: 1; }
+.tutor-name-mini { font-size: 12px; font-weight: 600; }
+.tutor-subj-mini { font-size: 11px; color: var(--gray); }
+.tutor-price-mini {
+  font-family: 'Syne',sans-serif; font-size: 13px; font-weight: 800; color: var(--blue);
+}
+.tutor-score-mini {
+  display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--amber);
+}
+.dynamic-badge {
+  background: rgba(79,142,247,0.15); border: 1px solid rgba(79,142,247,0.3);
+  border-radius: 6px; padding: 6px 10px; margin-top: 12px;
+  display: flex; align-items: center; gap: 6px; font-size: 11px;
+}
+.dynamic-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+
+/* Floating card behind phone */
+.float-card {
+  position: absolute; background: var(--card2);
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 12px 16px; z-index: 3;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.float-card.left { left: -60px; top: 120px; }
+.float-card.right { right: -50px; bottom: 100px; }
+.float-card-label { font-size: 10px; color: var(--gray); margin-bottom: 4px; }
+.float-card-val { font-family: 'Syne',sans-serif; font-size: 20px; font-weight: 800; color: var(--green); }
+.float-card-val2 { font-family: 'Syne',sans-serif; font-size: 18px; font-weight: 800; color: var(--blue); }
+
+/* ── SECTION SHARED ── */
+section { position: relative; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+.section-header { text-align: center; margin-bottom: 72px; }
+.section-header h2 { font-size: clamp(36px, 4vw, 52px); margin-bottom: 16px; }
+.section-header p { font-size: 18px; color: var(--gray); max-width: 560px; margin: 0 auto; }
+
+/* ── HOW IT WORKS ── */
+.how { padding: 120px 0; }
+.steps-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+  background: var(--border); border-radius: 20px; overflow: hidden;
+}
+.step {
+  background: var(--bg2); padding: 40px 28px;
+  position: relative; transition: background 0.3s;
+}
+.step:hover { background: var(--card); }
+.step-num {
+  font-family: 'Syne',sans-serif; font-size: 11px; font-weight: 800;
+  color: var(--blue); letter-spacing: 0.15em; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.step-num::before {
+  content: ''; display: block; width: 20px; height: 1px; background: var(--blue);
+}
+.step-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: var(--blue-dim); border: 1px solid rgba(79,142,247,0.2);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px; font-size: 22px;
+}
+.step h3 { font-size: 18px; margin-bottom: 10px; }
+.step p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+.step-arrow {
+  position: absolute; right: -14px; top: 50%;
+  transform: translateY(-50%); z-index: 1;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--blue); display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+
+/* ── FOR STUDENTS ── */
+.for-students { padding: 100px 0; background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%); }
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.feature-list { display: flex; flex-direction: column; gap: 24px; }
+.feature-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 20px; border-radius: 14px;
+  border: 1px solid transparent; transition: all 0.3s;
+}
+.feature-item:hover {
+  background: var(--card); border-color: var(--border);
+}
+.feature-ico {
+  width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.feature-ico.blue { background: var(--blue-dim); }
+.feature-ico.green { background: rgba(61,220,132,0.1); }
+.feature-ico.amber { background: rgba(240,162,58,0.1); }
+.feature-text h4 { font-family: 'Syne',sans-serif; font-size: 16px; margin-bottom: 6px; }
+.feature-text p { font-size: 14px; color: var(--gray); }
+
+/* Search UI mockup */
+.search-ui {
+  background: var(--card); border-radius: 20px;
+  border: 1px solid var(--border); overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+.search-ui-top {
+  padding: 24px; border-bottom: 1px solid var(--border);
+}
+.search-ui-top h4 { font-family: 'Syne',sans-serif; font-size: 14px; color: var(--gray); margin-bottom: 16px; font-weight: 600; }
+.search-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.search-chip {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 14px; font-size: 13px; color: var(--lgray);
+  flex: 1; cursor: pointer; transition: all 0.2s;
+}
+.search-chip.active { border-color: var(--blue); color: var(--blue); background: var(--blue-dim); }
+.search-btn {
+  background: var(--blue); color: #fff; border: none;
+  border-radius: 8px; padding: 8px 20px; font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap;
+}
+.tutor-results { padding: 16px 24px; }
+.tutor-result-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px; border-radius: 12px; margin-bottom: 10px;
+  background: var(--card2); border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.tutor-result-card:hover { border-color: var(--blue); }
+.tr-avatar {
+  width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne',sans-serif; font-weight: 800; font-size: 16px; color: #fff;
+}
+.tr-info { flex: 1; }
+.tr-name { font-size: 14px; font-weight: 600; }
+.tr-sub { font-size: 12px; color: var(--gray); }
+.tr-right { text-align: right; }
+.tr-price { font-family: 'Syne',sans-serif; font-size: 16px; font-weight: 800; color: var(--blue); }
+.tr-rating { font-size: 11px; color: var(--amber); }
+.tr-badge {
+  font-size: 10px; background: rgba(61,220,132,0.15);
+  color: var(--green); border-radius: 4px; padding: 2px 6px;
+  display: inline-block; margin-top: 2px;
+}
+
+/* ── FOR PROFESSORS ── */
+.for-professors { padding: 100px 0; }
+.prof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.prof-card {
+  background: var(--card); border-radius: 20px;
+  border: 1px solid var(--border); padding: 32px;
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.prof-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.prof-card:hover { border-color: rgba(79,142,247,0.3); transform: translateY(-4px); }
+.prof-card:hover::before { opacity: 1; }
+.prof-card-ico { font-size: 32px; margin-bottom: 20px; }
+.prof-card h3 { font-size: 18px; margin-bottom: 10px; }
+.prof-card p { font-size: 14px; color: var(--gray); }
+.prof-card.featured {
+  background: linear-gradient(135deg, var(--blue-dim) 0%, var(--card) 100%);
+  border-color: rgba(79,142,247,0.3);
+  grid-column: span 1;
+}
+.prof-card.featured .badge {
+  background: var(--blue); color: #fff;
+  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 12px;
+}
+
+/* Cluster Score visualization */
+.cluster-vis {
+  margin-top: 16px; display: flex; align-items: center; gap: 10px;
+}
+.cluster-bar {
+  flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden;
+}
+.cluster-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+}
+
+/* ── DYNAMIC PRICING ── */
+.pricing-section { padding: 100px 0; background: var(--bg2); }
+.pricing-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.pricing-left h2 { font-size: clamp(32px, 3.5vw, 48px); margin-bottom: 20px; }
+.pricing-left p { color: var(--gray); margin-bottom: 32px; font-size: 16px; line-height: 1.8; }
+.pricing-callout {
+  background: var(--blue-dim); border: 1px solid rgba(79,142,247,0.25);
+  border-radius: 14px; padding: 20px 24px;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.pricing-callout-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.pricing-callout-text h4 { font-family: 'Syne',sans-serif; font-size: 15px; margin-bottom: 6px; }
+.pricing-callout-text p { font-size: 13px; color: var(--gray); }
+
+/* Timeline viz */
+.timeline {
+  background: var(--card); border-radius: 20px;
+  border: 1px solid var(--border); padding: 28px;
+}
+.timeline-title { font-size: 12px; color: var(--gray); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.1em; }
+.timeline-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+}
+.timeline-label { font-size: 12px; color: var(--lgray); width: 120px; flex-shrink: 0; }
+.timeline-bar-wrap { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.timeline-bar { height: 100%; border-radius: 4px; transition: width 1s ease; }
+.timeline-val { font-size: 12px; font-family: 'Syne',sans-serif; font-weight: 700; width: 36px; text-align: right; }
+
+/* ── LECTURES ── */
+.lectures-section { padding: 100px 0; }
+.lectures-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.lecture-card {
+  background: var(--card); border-radius: 20px; overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.lecture-preview {
+  background: linear-gradient(135deg, #0D1B35, #0D2040);
+  padding: 28px; position: relative; min-height: 180px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.lecture-live {
+  position: absolute; top: 16px; right: 16px;
+  background: #E03C3C; color: #fff; font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 6px; display: flex; align-items: center; gap: 5px;
+}
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.lecture-viewer-count { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+.lecture-title { font-family: 'Syne',sans-serif; font-size: 18px; font-weight: 800; }
+.lecture-body { padding: 20px 24px; }
+.lecture-prof { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.lecture-prof-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), #3DDC84);
+}
+.lecture-prof-info .name { font-size: 14px; font-weight: 600; }
+.lecture-prof-info .univ { font-size: 12px; color: var(--gray); }
+.lecture-cta {
+  background: var(--blue-dim); border: 1px solid rgba(79,142,247,0.3);
+  border-radius: 10px; padding: 12px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.lecture-cta-text { font-size: 13px; color: var(--lgray); }
+.lecture-cta-btn {
+  background: var(--blue); color: #fff; border: none;
+  padding: 7px 16px; border-radius: 7px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+}
+
+/* ── WAITLIST ── */
+.waitlist { padding: 100px 0; }
+.waitlist-inner {
+  background: var(--card);
+  border-radius: 28px; border: 1px solid var(--border);
+  padding: 72px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.waitlist-glow {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px; height: 300px;
+  background: radial-gradient(ellipse, rgba(79,142,247,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.waitlist h2 { font-size: clamp(32px, 4vw, 52px); margin-bottom: 16px; position: relative; }
+.waitlist p { color: var(--gray); font-size: 18px; margin-bottom: 48px; position: relative; }
+.waitlist-tabs {
+  display: flex; justify-content: center; gap: 0; margin-bottom: 32px; position: relative;
+  background: var(--bg); border-radius: 12px; padding: 4px; display: inline-flex;
+}
+.waitlist-tab {
+  padding: 10px 28px; border-radius: 9px; border: none;
+  background: transparent; color: var(--gray); font-size: 15px; font-weight: 500;
+  cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+}
+.waitlist-tab.active { background: var(--blue); color: #fff; }
+.waitlist-form {
+  display: flex; gap: 12px; max-width: 500px; margin: 0 auto; position: relative;
+}
+.waitlist-input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 20px; color: var(--white);
+  font-size: 15px; font-family: 'DM Sans', sans-serif; outline: none;
+  transition: border-color 0.2s;
+}
+.waitlist-input:focus { border-color: var(--blue); }
+.waitlist-input::placeholder { color: var(--gray); }
+.waitlist-submit {
+  background: var(--blue); color: #fff; border: none;
+  padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 0 25px rgba(79,142,247,0.3);
+}
+.waitlist-submit:hover { background: #6BA3FF; transform: translateY(-1px); }
+.waitlist-note { font-size: 13px; color: var(--gray); margin-top: 16px; position: relative; }
+
+/* ── FOOTER ── */
+footer {
+  padding: 60px 48px 40px;
+  border-top: 1px solid var(--border);
+}
+.footer-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-logo { font-family: 'Syne',sans-serif; font-weight: 800; font-size: 20px; }
+.footer-logo span { color: var(--blue); }
+.footer-links { display: flex; gap: 32px; }
+.footer-links a { color: var(--gray); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-copy { font-size: 13px; color: var(--gray); }
+
+/* ── ANIMATIONS ── */
+.fade-up {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-right { display: none; }
+  .container { padding: 0 24px; }
+  .steps-grid { grid-template-columns: 1fr 1fr; }
+  .two-col, .pricing-inner, .lectures-inner { grid-template-columns: 1fr; gap: 48px; }
+  .prof-grid { grid-template-columns: 1fr; }
+  .waitlist-inner { padding: 48px 24px; }
+  .waitlist-form { flex-direction: column; }
+  .footer-inner { flex-direction: column; gap: 24px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">up<span>Grade</span></a>
+  <div class="nav-links">
+    <a href="#how" data-en="How it works" data-es="Cómo funciona">How it works</a>
+    <a href="#students" data-en="For Students" data-es="Para Alumnos">For Students</a>
+    <a href="#professors" data-en="For Professors" data-es="Para Profesores">For Professors</a>
+    <a href="#waitlist" data-en="Join Waitlist" data-es="Lista de Espera">Join Waitlist</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="active" onclick="setLang('en')">EN</button>
+      <button onclick="setLang('es')">ES</button>
+    </div>
+    <button class="btn-nav" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})" data-en="Get Early Access" data-es="Acceso Anticipado">Get Early Access</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div class="hero-left fade-up">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span class="label" data-en="Now accepting early access" data-es="Aceptando acceso anticipado">Now accepting early access</span>
+      </div>
+      <h1 data-en="The smartest way to learn. The fairest way to teach." data-es="La manera más inteligente de aprender. La más justa de enseñar.">The smartest way to learn.<br>The fairest way to <em>teach.</em></h1>
+      <p class="hero-sub" data-en="upGrade connects university students with top-rated tutors through intelligent dynamic pricing — the price adjusts in real time based on demand. Like Uber, but for education." data-es="upGrade conecta estudiantes universitarios con los mejores profesores a través de pricing dinámico inteligente — el precio se ajusta en tiempo real según la demanda. Como Uber, pero para educación.">upGrade connects university students with top-rated tutors through intelligent dynamic pricing — the price adjusts in real time based on demand. Like Uber, but for education.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})" data-en="Join as Student" data-es="Unirme como Alumno">Join as Student</button>
+        <button class="btn-secondary" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})" data-en="Join as Tutor" data-es="Unirme como Profesor">Join as Tutor</button>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-val">2M+</div>
+          <div class="hero-stat-lbl" data-en="University students in Argentina" data-es="Estudiantes universitarios en Argentina">University students in Argentina</div>
+        </div>
+        <div>
+          <div class="hero-stat-val">$380M</div>
+          <div class="hero-stat-lbl" data-en="LATAM tutoring market / year" data-es="Mercado de tutorías LATAM / año">LATAM tutoring market / year</div>
+        </div>
+        <div>
+          <div class="hero-stat-val">0</div>
+          <div class="hero-stat-lbl" data-en="Competitors with dynamic pricing" data-es="Competidores con pricing dinámico">Competitors with dynamic pricing</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHONE MOCKUP -->
+    <div class="hero-right fade-up" style="animation-delay:0.2s">
+      <div class="mockup-wrap">
+        <!-- Float cards -->
+        <div class="float-card left">
+          <div class="float-card-label" data-en="This week's avg. saving" data-es="Ahorro promedio esta semana">This week's avg. saving</div>
+          <div class="float-card-val">-23%</div>
+        </div>
+        <div class="float-card right">
+          <div class="float-card-label" data-en="Classes booked today" data-es="Clases reservadas hoy">Classes booked today</div>
+          <div class="float-card-val2">847</div>
+        </div>
+
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-header">
+              <div class="phone-logo">up<span>Grade</span></div>
+              <div class="phone-avatar"></div>
+            </div>
+            <div class="search-box">
+              <svg class="search-icon" fill="none" stroke="#8B96A8" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <span class="search-placeholder" data-en="Search subject..." data-es="Buscar materia...">Search subject...</span>
+            </div>
+            <div class="section-title-sm" data-en="TOP TUTORS — CALCULUS I" data-es="TOP PROFESORES — CÁLCULO I">TOP TUTORS — CALCULUS I</div>
+            <div class="tutor-card-mini active">
+              <div class="tutor-avatar-mini" style="background:linear-gradient(135deg,#4F8EF7,#7BB3FF)">MR</div>
+              <div class="tutor-info-mini">
+                <div class="tutor-name-mini">Matías R.</div>
+                <div class="tutor-subj-mini">UTN · 4.9 ⭐ Elite</div>
+              </div>
+              <div>
+                <div class="tutor-price-mini">$4.200</div>
+                <div class="tutor-score-mini">★★★★★</div>
+              </div>
+            </div>
+            <div class="tutor-card-mini">
+              <div class="tutor-avatar-mini" style="background:linear-gradient(135deg,#3DDC84,#1BAD60)">SG</div>
+              <div class="tutor-info-mini">
+                <div class="tutor-name-mini">Sofía G.</div>
+                <div class="tutor-subj-mini">UBA · 4.8 ⭐</div>
+              </div>
+              <div>
+                <div class="tutor-price-mini">$3.800</div>
+                <div class="tutor-score-mini">★★★★★</div>
+              </div>
+            </div>
+            <div class="dynamic-badge">
+              <div class="dynamic-badge-dot"></div>
+              <span style="font-size:11px;color:var(--blue)" data-en="Smart pricing active" data-es="Precio dinámico activo">Smart pricing active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="label" style="margin-bottom:12px" data-en="HOW IT WORKS" data-es="CÓMO FUNCIONA">HOW IT WORKS</div>
+      <h2 data-en="From search to class in under 5 minutes." data-es="De la búsqueda a la clase en menos de 5 minutos.">From search to class<br>in under 5 minutes.</h2>
+      <p data-en="A simple, secure, and transparent flow — for both students and tutors." data-es="Un flujo simple, seguro y transparente — para alumnos y profesores.">A simple, secure, and transparent flow — for both students and tutors.</p>
+    </div>
+    <div class="steps-grid fade-up">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">🔍</div>
+        <h3 data-en="Pick your subject" data-es="Elegí la materia">Pick your subject</h3>
+        <p data-en="Select the subject and describe what you need to study. Set your available dates and times." data-es="Seleccioná la materia y describí lo que necesitás estudiar. Ponés tus fechas y horarios disponibles.">Select the subject and describe what you need to study. Set your available dates and times.</p>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">📋</div>
+        <h3 data-en="Get your catalog" data-es="Recibí tu catálogo">Get your catalog</h3>
+        <p data-en="The algorithm surfaces the best tutors ranked for you — by rating, expertise, and smart price." data-es="El algoritmo te muestra los mejores profesores rankeados — por rating, experiencia y precio inteligente.">The algorithm surfaces the best tutors ranked for you — by rating, expertise, and smart price.</p>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">💳</div>
+        <h3 data-en="Book & pay securely" data-es="Reservá y pagá seguro">Book & pay securely</h3>
+        <p data-en="Payment is held in escrow. The tutor confirms and a video link is generated automatically." data-es="El pago queda retenido en escrow. El profesor confirma y se genera el link de videollamada automáticamente.">Payment is held in escrow. The tutor confirms and a video link is generated automatically.</p>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-icon">👍</div>
+        <h3 data-en="Learn & rate" data-es="Aprendé y calificá">Learn & rate</h3>
+        <p data-en="The class happens online. Once it ends, the payment is released to the tutor automatically. Rate your experience." data-es="La clase se da online. Al terminar, el pago se libera al profesor automáticamente. Calificá tu experiencia.">The class happens online. Once it ends, payment is released to the tutor. Rate your experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR STUDENTS -->
+<section class="for-students" id="students">
+  <div class="container">
+    <div class="two-col">
+      <div class="fade-up">
+        <div class="label" style="margin-bottom:12px" data-en="FOR STUDENTS" data-es="PARA ALUMNOS">FOR STUDENTS</div>
+        <h2 style="font-size:clamp(32px,3.5vw,48px);margin-bottom:20px" data-en="Stop wasting time finding help." data-es="Dejá de perder tiempo buscando ayuda.">Stop wasting time<br>finding help.</h2>
+        <p style="color:var(--gray);margin-bottom:36px;line-height:1.8" data-en="No more hunting through WhatsApp groups. upGrade shows you the best available tutors for your exact subject — with verified ratings, transparent pricing, and secure payment." data-es="No más búsquedas por grupos de WhatsApp. upGrade te muestra los mejores profesores disponibles para tu materia — con ratings verificados, precios transparentes y pago seguro.">No more hunting through WhatsApp groups. upGrade shows you the best available tutors for your exact subject — with verified ratings, transparent pricing, and secure payment.</p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-ico blue">🎯</div>
+            <div class="feature-text">
+              <h4 data-en="Smart matching" data-es="Matching inteligente">Smart matching</h4>
+              <p data-en="The algorithm finds your best tutor based on subject, university, availability and your budget." data-es="El algoritmo encuentra tu mejor profesor según materia, universidad, disponibilidad y presupuesto.">The algorithm finds your best tutor based on subject, university, availability and your budget.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-ico green">🔒</div>
+            <div class="feature-text">
+              <h4 data-en="100% secure payment" data-es="Pago 100% seguro">100% secure payment</h4>
+              <p data-en="Your money is held safely until the class ends. If something goes wrong, you get refunded." data-es="Tu dinero queda retenido hasta que termina la clase. Si algo sale mal, te reembolsamos.">Your money is held safely until the class ends. If something goes wrong, you get refunded.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-ico amber">⚡</div>
+            <div class="feature-text">
+              <h4 data-en="Urgent? No problem." data-es="¿Urgente? Sin problema.">Urgent? No problem.</h4>
+              <p data-en="Need a class in 2 hours before your exam? Set your urgency level and get matched instantly." data-es="¿Necesitás una clase en 2 horas antes del parcial? Ponés tu nivel de urgencia y te conectamos al instante.">Need a class in 2 hours before your exam? Set your urgency level and get matched instantly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fade-up" style="animation-delay:0.15s">
+        <div class="search-ui">
+          <div class="search-ui-top">
+            <h4 data-en="FIND A CLASS" data-es="BUSCAR CLASE">FIND A CLASS</h4>
+            <div class="search-row">
+              <div class="search-chip active" data-en="Calculus I" data-es="Cálculo I">Calculus I</div>
+              <div class="search-chip" data-en="Physics II" data-es="Física II">Physics II</div>
+              <div class="search-chip" data-en="Chemistry" data-es="Química">Chemistry</div>
+            </div>
+            <div class="search-row">
+              <div class="search-chip" data-en="📅 This week" data-es="📅 Esta semana">📅 This week</div>
+              <div class="search-chip active" data-en="⚡ Urgent" data-es="⚡ Urgente">⚡ Urgent</div>
+              <button class="search-btn" data-en="Search →" data-es="Buscar →">Search →</button>
+            </div>
+          </div>
+          <div class="tutor-results">
+            <div style="font-size:11px;color:var(--gray);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em" data-en="3 tutors found" data-es="3 profesores encontrados">3 tutors found</div>
+            <div class="tutor-result-card">
+              <div class="tr-avatar" style="background:linear-gradient(135deg,#4F8EF7,#7BB3FF)">MR</div>
+              <div class="tr-info">
+                <div class="tr-name">Matías R.</div>
+                <div class="tr-sub">UTN · Calculus I, II, III</div>
+                <span class="tr-badge" data-en="Elite Tutor" data-es="Tutor Elite">Elite Tutor</span>
+              </div>
+              <div class="tr-right">
+                <div class="tr-price">$4.200</div>
+                <div class="tr-rating">★★★★★ 4.9</div>
+              </div>
+            </div>
+            <div class="tutor-result-card">
+              <div class="tr-avatar" style="background:linear-gradient(135deg,#3DDC84,#1BAD60)">SG</div>
+              <div class="tr-info">
+                <div class="tr-name">Sofía G.</div>
+                <div class="tr-sub">UBA · Calculus, Algebra</div>
+              </div>
+              <div class="tr-right">
+                <div class="tr-price">$3.800</div>
+                <div class="tr-rating">★★★★★ 4.8</div>
+              </div>
+            </div>
+            <div class="tutor-result-card">
+              <div class="tr-avatar" style="background:linear-gradient(135deg,#F0A23A,#E07B20)">LP</div>
+              <div class="tr-info">
+                <div class="tr-name">Lucas P.</div>
+                <div class="tr-sub">UNC · Math, Physics</div>
+              </div>
+              <div class="tr-right">
+                <div class="tr-price">$3.200</div>
+                <div class="tr-rating">★★★★☆ 4.6</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR PROFESSORS -->
+<section class="for-professors" id="professors">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="label" style="margin-bottom:12px" data-en="FOR TUTORS" data-es="PARA PROFESORES">FOR TUTORS</div>
+      <h2 data-en="Turn your knowledge into income. On your terms." data-es="Convertí tu conocimiento en ingresos. En tus términos.">Turn your knowledge into income.<br>On your terms.</h2>
+      <p data-en="upGrade helps you build your reputation, attract more students, and earn what you're truly worth — especially during peak exam periods." data-es="upGrade te ayuda a construir tu reputación, atraer más alumnos y ganar lo que realmente valés — especialmente en época de exámenes.">upGrade helps you build your reputation, attract more students, and earn what you're truly worth — especially during peak exam periods.</p>
+    </div>
+    <div class="prof-grid fade-up">
+      <div class="prof-card">
+        <div class="prof-card-ico">💰</div>
+        <h3 data-en="Smart earnings" data-es="Ganancias inteligentes">Smart earnings</h3>
+        <p data-en="Our algorithm ensures you earn more when demand is high — like during exam periods — without you having to do anything." data-es="Nuestro algoritmo asegura que ganés más cuando la demanda es alta — como en época de exámenes — sin que tengas que hacer nada.">Our algorithm ensures you earn more when demand is high — like during exam periods — without you having to do anything.</p>
+      </div>
+      <div class="prof-card featured">
+        <span class="badge" data-en="NEW FEATURE" data-es="NUEVA FUNCIÓN">NEW FEATURE</span>
+        <div class="prof-card-ico">📡</div>
+        <h3 data-en="Free public lectures" data-es="Lectures públicas gratuitas">Free public lectures</h3>
+        <p data-en="Host live streaming classes open to anyone on the platform. Build your audience, showcase your skills, and convert viewers into paying students." data-es="Dá clases en vivo abiertas a cualquier usuario de la plataforma. Construí tu audiencia, mostrá tus habilidades y convertí espectadores en alumnos.">Host live streaming classes open to anyone on the platform. Build your audience, showcase your skills, and convert viewers into paying students.</p>
+      </div>
+      <div class="prof-card">
+        <div class="prof-card-ico">⭐</div>
+        <h3 data-en="Cluster Score" data-es="Cluster Score">Cluster Score</h3>
+        <p data-en="Your composite reputation score. The higher it climbs, the more visibility, demand, and earning power you unlock." data-es="Tu puntaje de reputación compuesto. A mayor score, más visibilidad, demanda y poder de ganancia.">Your composite reputation score. The higher it climbs, the more visibility, demand, and earning power you unlock.</p>
+        <div class="cluster-vis">
+          <span style="font-size:12px;color:var(--gray);width:40px">8.7</span>
+          <div class="cluster-bar"><div class="cluster-fill" style="width:87%"></div></div>
+          <span style="font-size:11px;color:var(--blue)">Elite</span>
+        </div>
+      </div>
+      <div class="prof-card">
+        <div class="prof-card-ico">📅</div>
+        <h3 data-en="Full schedule control" data-es="Control total del horario">Full schedule control</h3>
+        <p data-en="Set your availability by the hour. Accept or decline requests. You decide when and how much you work." data-es="Establecé tu disponibilidad hora por hora. Aceptá o rechazá solicitudes. Vos decidís cuándo y cuánto trabajar.">Set your availability by the hour. Accept or decline requests. You decide when and how much you work.</p>
+      </div>
+      <div class="prof-card">
+        <div class="prof-card-ico">🔐</div>
+        <h3 data-en="Guaranteed payment" data-es="Pago garantizado">Guaranteed payment</h3>
+        <p data-en="Payment is secured before the class. No chasing students. No unpaid sessions. Money lands in your account automatically after class ends." data-es="El pago está asegurado antes de la clase. Sin perseguir alumnos. Sin sesiones sin cobrar. El dinero llega a tu cuenta automáticamente al terminar.">Payment is secured before the class. No chasing students. No unpaid sessions. Money lands in your account automatically after class ends.</p>
+      </div>
+      <div class="prof-card">
+        <div class="prof-card-ico">🌎</div>
+        <h3 data-en="Grow with us" data-es="Crecé con nosotros">Grow with us</h3>
+        <p data-en="Starting in Argentina. Expanding to Mexico, Chile, Colombia, and beyond. Your reputation travels with you as we grow globally." data-es="Arrancamos en Argentina. Expandiendo a México, Chile, Colombia y más. Tu reputación te acompaña mientras crecemos globalmente.">Starting in Argentina. Expanding to Mexico, Chile, Colombia, and beyond. Your reputation travels with you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DYNAMIC PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <div class="pricing-inner">
+      <div class="pricing-left fade-up">
+        <div class="label" style="margin-bottom:12px" data-en="DYNAMIC PRICING" data-es="PRICING DINÁMICO">DYNAMIC PRICING</div>
+        <h2 data-en="The price that's always fair." data-es="El precio que siempre es justo.">The price that's always fair.</h2>
+        <p data-en="upGrade is the first tutoring platform to apply real-time dynamic pricing. The algorithm constantly adjusts prices to balance supply and demand — ensuring students always get fair value, and tutors always earn what they deserve." data-es="upGrade es la primera plataforma de tutorías con pricing dinámico en tiempo real. El algoritmo ajusta los precios constantemente para equilibrar oferta y demanda — asegurando que los alumnos siempre obtengan valor justo y los profesores siempre ganen lo que merecen.">upGrade is the first tutoring platform to apply real-time dynamic pricing. The algorithm constantly adjusts prices to balance supply and demand — ensuring students always get fair value, and tutors always earn what they deserve.</p>
+        <div class="pricing-callout">
+          <div class="pricing-callout-icon">💡</div>
+          <div class="pricing-callout-text">
+            <h4 data-en="Book ahead, pay less." data-es="Reservá antes, pagás menos.">Book ahead, pay less.</h4>
+            <p data-en="Plan your session in advance and the algorithm rewards you with lower prices. The earlier you book, the better the deal." data-es="Planificá tu sesión con anticipación y el algoritmo te recompensa con precios más bajos. Cuanto antes reservés, mejor el precio.">Plan your session in advance and the algorithm rewards you with lower prices. The earlier you book, the better the deal.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fade-up" style="animation-delay:0.15s">
+        <div class="timeline">
+          <div class="timeline-title" data-en="DEMAND INDEX BY PERIOD" data-es="ÍNDICE DE DEMANDA POR PERÍODO">DEMAND INDEX BY PERIOD</div>
+          <div class="timeline-row">
+            <div class="timeline-label" data-en="Vacation / recess" data-es="Vacaciones / receso">Vacation / recess</div>
+            <div class="timeline-bar-wrap"><div class="timeline-bar" style="width:40%;background:#3DDC84"></div></div>
+            <div class="timeline-val" style="color:#3DDC84">Low</div>
+          </div>
+          <div class="timeline-row">
+            <div class="timeline-label" data-en="Regular period" data-es="Período regular">Regular period</div>
+            <div class="timeline-bar-wrap"><div class="timeline-bar" style="width:55%;background:#4F8EF7"></div></div>
+            <div class="timeline-val" style="color:#4F8EF7">Mid</div>
+          </div>
+          <div class="timeline-row">
+            <div class="timeline-label" data-en="Pre-exam (2 weeks)" data-es="Pre-examen (2 sem)">Pre-exam (2 weeks)</div>
+            <div class="timeline-bar-wrap"><div class="timeline-bar" style="width:72%;background:#7BB3FF"></div></div>
+            <div class="timeline-val" style="color:#7BB3FF">High</div>
+          </div>
+          <div class="timeline-row">
+            <div class="timeline-label" data-en="Exam week" data-es="Semana de examen">Exam week</div>
+            <div class="timeline-bar-wrap"><div class="timeline-bar" style="width:90%;background:linear-gradient(90deg,#4F8EF7,#F0A23A)"></div></div>
+            <div class="timeline-val" style="color:#F0A23A">Peak</div>
+          </div>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+            <div style="font-size:12px;color:var(--gray)" data-en="The algorithm reads the academic calendar of each university in real time and adjusts prices automatically — no manual intervention needed." data-es="El algoritmo lee el calendario académico de cada universidad en tiempo real y ajusta los precios automáticamente — sin intervención manual.">The algorithm reads the academic calendar of each university in real time and adjusts prices automatically — no manual intervention needed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE LECTURES -->
+<section class="lectures-section" id="lectures">
+  <div class="container">
+    <div class="lectures-inner">
+      <div class="fade-up">
+        <div class="label" style="margin-bottom:12px" data-en="FREE LECTURES" data-es="LECTURES GRATUITAS">FREE LECTURES</div>
+        <h2 style="font-size:clamp(32px,3.5vw,48px);margin-bottom:20px" data-en="Teach live. Build your audience." data-es="Enseñá en vivo. Construí tu audiencia.">Teach live.<br>Build your audience.</h2>
+        <p style="color:var(--gray);margin-bottom:32px;line-height:1.8" data-en="Tutors can host free public streaming classes — open to any student on the platform. It's your stage to showcase expertise, grow your following, and convert viewers into booked sessions." data-es="Los profesores pueden dar clases gratuitas en vivo abiertas a cualquier alumno de la plataforma. Es tu espacio para mostrar tu expertise, construir tu audiencia y convertir espectadores en alumnos.">Tutors can host free public streaming classes — open to any student on the platform. It's your stage to showcase expertise, grow your following, and convert viewers into booked sessions.</p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-ico blue">📺</div>
+            <div class="feature-text">
+              <h4 data-en="Live streaming to all students" data-es="Streaming en vivo para todos los alumnos">Live streaming to all students</h4>
+              <p data-en="Go live anytime and any student on upGrade can tune in for free." data-es="Iniciá en vivo cuando quieras y cualquier alumno de upGrade puede unirse gratuitamente.">Go live anytime and any student on upGrade can tune in for free.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-ico green">📈</div>
+            <div class="feature-text">
+              <h4 data-en="Convert viewers to bookings" data-es="Convertí espectadores en reservas">Convert viewers to bookings</h4>
+              <p data-en="Viewers can book a private 1-on-1 session directly from your lecture stream — one tap away." data-es="Los espectadores pueden reservar una sesión privada directamente desde tu stream — a un solo toque.">Viewers can book a private 1-on-1 session directly from your lecture stream — one tap away.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-ico amber">🏆</div>
+            <div class="feature-text">
+              <h4 data-en="Boost your Cluster Score" data-es="Subí tu Cluster Score">Boost your Cluster Score</h4>
+              <p data-en="Free lectures count toward your reputation. More engagement = higher score = higher earnings." data-es="Las lectures gratuitas cuentan para tu reputación. Más engagement = mayor score = mayores ganancias.">Free lectures count toward your reputation. More engagement = higher score = higher earnings.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fade-up" style="animation-delay:0.15s">
+        <div class="lecture-card">
+          <div class="lecture-preview">
+            <div class="lecture-live">
+              <div class="live-dot"></div>
+              LIVE
+            </div>
+            <div class="lecture-viewer-count" data-en="🔴 247 watching now" data-es="🔴 247 viendo ahora">🔴 247 watching now</div>
+            <div class="lecture-title" data-en="Calculus II — Integration techniques" data-es="Cálculo II — Técnicas de integración">Calculus II — Integration techniques</div>
+          </div>
+          <div class="lecture-body">
+            <div class="lecture-prof">
+              <div class="lecture-prof-avatar"></div>
+              <div class="lecture-prof-info">
+                <div class="name">Dr. Alejandro M.</div>
+                <div class="univ">UTN CABA · Cluster Score 9.2 ⭐</div>
+              </div>
+            </div>
+            <div class="lecture-cta">
+              <div class="lecture-cta-text" data-en="Want a private session?" data-es="¿Querés una clase privada?">Want a private session?</div>
+              <button class="lecture-cta-btn" data-en="Book now →" data-es="Reservar →">Book now →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section class="waitlist" id="waitlist">
+  <div class="container">
+    <div class="waitlist-inner fade-up">
+      <div class="waitlist-glow"></div>
+      <div class="label" style="margin-bottom:16px" data-en="EARLY ACCESS" data-es="ACCESO ANTICIPADO">EARLY ACCESS</div>
+      <h2 data-en="Be first. Get the best price." data-es="Sé el primero. Obtené el mejor precio.">Be first. Get the best price.</h2>
+      <p data-en="Join the waitlist and be among the first to access upGrade when we launch in Buenos Aires." data-es="Anotate en la lista y sé de los primeros en acceder a upGrade cuando lancemos en Buenos Aires.">Join the waitlist and be among the first to access upGrade when we launch in Buenos Aires.</p>
+      <div class="waitlist-tabs">
+        <button class="waitlist-tab active" onclick="setTab('student')" data-en="I'm a Student" data-es="Soy Alumno" id="tab-student">I'm a Student</button>
+        <button class="waitlist-tab" onclick="setTab('tutor')" data-en="I'm a Tutor" data-es="Soy Profesor" id="tab-tutor">I'm a Tutor</button>
+      </div>
+      <div class="waitlist-form">
+        <input type="email" class="waitlist-input" id="waitlist-email" placeholder="your@email.com">
+        <button class="waitlist-submit" onclick="submitWaitlist()" data-en="Join Waitlist →" data-es="Anotarme →">Join Waitlist →</button>
+      </div>
+      <div class="waitlist-note" data-en="No spam. No credit card. Just early access." data-es="Sin spam. Sin tarjeta. Solo acceso anticipado.">No spam. No credit card. Just early access.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">up<span>Grade</span></div>
+    <div class="footer-links">
+      <a href="#how" data-en="How it works" data-es="Cómo funciona">How it works</a>
+      <a href="#students" data-en="For Students" data-es="Para Alumnos">For Students</a>
+      <a href="#professors" data-en="For Tutors" data-es="Para Profesores">For Tutors</a>
+    </div>
+    <div class="footer-copy" data-en="© 2026 upGrade · Buenos Aires, Argentina" data-es="© 2026 upGrade · Buenos Aires, Argentina">© 2026 upGrade · Buenos Aires, Argentina</div>
+  </div>
+</footer>
+
+<script>
+// ── LANGUAGE ──────────────────────────────────────────────────────
+let currentLang = 'en';
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-toggle button').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase() === lang);
+  });
+  document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+    el.textContent = el.getAttribute('data-' + lang);
+  });
+}
+
+// ── TABS ─────────────────────────────────────────────────────────
+let currentTab = 'student';
+function setTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-student').classList.toggle('active', tab === 'student');
+  document.getElementById('tab-tutor').classList.toggle('active', tab === 'tutor');
+  const ph = tab === 'student'
+    ? (currentLang === 'es' ? 'tu@email.com' : 'your@email.com')
+    : (currentLang === 'es' ? 'profe@email.com' : 'tutor@email.com');
+  document.getElementById('waitlist-email').placeholder = ph;
+}
+
+// ── WAITLIST SUBMIT ───────────────────────────────────────────────
+function submitWaitlist() {
+  const email = document.getElementById('waitlist-email').value;
+  if (!email || !email.includes('@')) {
+    document.getElementById('waitlist-email').style.borderColor = '#E03C3C';
+    setTimeout(() => document.getElementById('waitlist-email').style.borderColor = '', 1500);
+    return;
+  }
+  const btn = document.querySelector('.waitlist-submit');
+  btn.textContent = currentLang === 'es' ? '✓ ¡Anotado!' : '✓ You\'re in!';
+  btn.style.background = '#3DDC84';
+  btn.style.boxShadow = '0 0 25px rgba(61,220,132,0.3)';
+  document.getElementById('waitlist-email').value = '';
+  setTimeout(() => {
+    btn.textContent = currentLang === 'es' ? 'Anotarme →' : 'Join Waitlist →';
+    btn.style.background = '';
+    btn.style.boxShadow = '';
+  }, 3000);
+}
+
+// ── SCROLL ANIMATIONS ─────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ── NAV SCROLL ────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.borderBottomColor = window.scrollY > 50
+    ? 'rgba(79,142,247,0.15)' : 'rgba(255,255,255,0.07)';
+});
+
+// ── CHIP INTERACTION ──────────────────────────────────────────────
+document.querySelectorAll('.search-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const row = chip.parentElement;
+    row.querySelectorAll('.search-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
